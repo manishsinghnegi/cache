@@ -10,12 +10,12 @@ public class CacheService {
 
   public void runCache() throws Exception {
 
-    Person person = new Person("Manish", "Negi", "manish.negi", 30);
+    Person person = new Person("Donald", "Trump", "donald.trump", 73);
     personCache.init();
     personCache.put(KEY, person);
     Person cachedPerson = personCache.get(KEY);
 
-    System.out.println("Before Sleep : Name :"+ cachedPerson.getName() + " Age :"+cachedPerson.getAge());
+    System.out.println("Before Sleep : Name :"+ cachedPerson.getName() + " Surname :"+cachedPerson.getSurname());
     Thread.sleep(11000);
     if(personCache.get(KEY) == null){
       System.out.println("No Person Data for "+ KEY);
