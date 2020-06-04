@@ -8,15 +8,25 @@ import java.text.NumberFormat;
 import net.spy.memcached.MemcachedClient;
 
 public class Memcached {
-  public static void main(String[] args) throws IOException {
-    //Connecting to Redis server on localhost
-    //Jedis jedis = new Jedis("localhost");
-
+  private static final String KEY = "Person_Details";
+  public static void main(String[] args) throws IOException, InterruptedException {
     MemcachedClient mcc = new MemcachedClient(new
         InetSocketAddress("localhost", 11211));
-    System.out.println("Connection to server sucessfully");
-    mcc.set("hi",9, "hey");
-    System.out.println(mcc.get("hi"));
+    Person person = new Person("Donald", "Trump", "donald.trump", 73);
+    System.out.println("Connection to server sucessful");
+    System.out.println("Data put into Cache - Name :"+ person.getName() + " Surname :"+person.getSurname());
+    mcc.set(KEY,10, person);
+    Person cachedPerson = (Person)mcc.get(KEY);
+    System.out.println("Fetched Data From Cache - Name :"+ cachedPerson.getName() + " Surname :"+cachedPerson.getSurname());
+    System.out.println("11 second wait for record to expire....");
+    Thread.sleep(11000);
+    if(mcc.get(KEY) == null){
+      System.out.println("No Person Data for "+ KEY);
+    }
+    else{
+      cachedPerson = (Person)mcc.get(KEY);
+      System.out.println("After Sleep : Name :"+ cachedPerson.getName() + " Age :"+cachedPerson.getAge());
+    }
     Runtime runtime = Runtime.getRuntime();
 
     NumberFormat format = NumberFormat.getInstance();
